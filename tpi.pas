@@ -18,7 +18,31 @@ type
 	pantallas = array [1..C] of pantalla;
 	cajaNegra = array [1..L,1..L] of shortstring;
 
-procedure llenarCaja(var caja: cajaNegra);
+procedure llenarCaja(var caja: cajaNegra; p:pantallas; const C:integer); //nuevo llenar caja
+var i,k,x,y:integer; //agragar la j
+begin
+	k := 11; //es la medida de la caja negra
+	//CAJA
+	for i:= 1 to C do
+	begin
+		x:= p[i].posx ;
+		y:= p[i].posy ;
+		caja[x,y]:= p[i].dir;
+	end;
+	//SALIDA
+		//LATERALES
+	for i:= 2 to k do	//lateral izquierdo
+		caja[i,1]:= IntToStr(k - i);
+	for i:= 2 to k do	//lateral izquierdo
+		caja[i,k+1]:= IntToStr(18 + i);
+		//SUP Y INF
+	for i:= 2 to k do	//parte superior
+		caja[1,i]:= IntToStr(8 + i);
+	for i:= 2 to k do	//parte inferior
+		caja[k + 1,i]:= IntToStr(41 - i);
+end;
+
+{procedure llenarCaja(var caja: cajaNegra);
 var i,k,j:integer; //agragar la j
 begin
 	k := 11; //es la medida de la caja negra
@@ -39,7 +63,7 @@ begin
 		caja[1,i]:= IntToStr(8 + i);
 	for i:= 2 to k do	//parte inferior
 		caja[k + 1,i]:= IntToStr(41 - i);
-end;
+end;}
 
 procedure dibujarCaja(caja: cajaNegra; const L:integer); //este es el nuevo dibujar
 var i,j: integer;
@@ -64,6 +88,7 @@ begin
 		WriteLn;
 	end;
 end;
+
 {procedure dibujarCaja(caja: cajaNegra; const L:integer);
 var i,j: integer;
 begin
@@ -78,6 +103,7 @@ begin
 		WriteLn;
 	end;
 end;}
+
 procedure ubicarPantallas(var p:pantallas; const C:integer);
 var i,n:integer;
 begin
@@ -109,9 +135,10 @@ var cn:		cajaNegra;
 	pant:	pantallas;
 
 BEGIN
-	llenarCaja(cn);
+	ubicarPantallas(pant,C);
+	llenarCaja(cn,pant,C);
 	dibujarCaja(cn,L);
 	WriteLn;
-	ubicarPantallas(pant,C);
+	//ubicarPantallas(pant,C);
 	tabla(pant,C);
 END.
