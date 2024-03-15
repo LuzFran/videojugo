@@ -40,7 +40,31 @@ begin
 	for i:= 2 to k do	//parte inferior
 		caja[k + 1,i]:= IntToStr(41 - i);
 end;
-procedure dibujarCaja(caja: cajaNegra; const L:integer);
+
+procedure dibujarCaja(caja: cajaNegra; const L:integer); //este es el nuevo dibujar
+var i,j: integer;
+begin
+	for i:= 1 to L do
+	begin
+		for j:= 1 to L do
+		begin
+			if (i > 1) and (j > 1) and (i < L) then
+			begin
+			write('|');
+			Write(caja[i,j]:2);
+			end
+			else 
+			begin
+			write(' ');
+			Write(caja[i,j]:2);
+			end;
+		end;
+		if (j < L) then
+			Write('|');
+		WriteLn;
+	end;
+end;
+{procedure dibujarCaja(caja: cajaNegra; const L:integer);
 var i,j: integer;
 begin
 	for i:= 1 to L do
@@ -53,7 +77,7 @@ begin
 		Write('|');
 		WriteLn;
 	end;
-end;
+end;}
 procedure ubicarPantallas(var p:pantallas; const C:integer);
 var i,n:integer;
 begin
