@@ -1,3 +1,5 @@
+//holaaaaaaa
+
 program tpi;
 uses SysUtils,crt;
 Const
@@ -88,6 +90,4 @@ BEGIN
 	WriteLn;
 	ubicarPantallas(pant,C);
 	tabla(pant,C);
-	
 END.
-
