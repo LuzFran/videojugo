@@ -1,144 +1,279 @@
-//holaaaaaaa
-
 program tpi;
+
 uses SysUtils,crt;
+//	------DECLARACION DE VARIABLES, CONSTANTES Y MATRICES------
 Const
-	L = 12; //medida de la caja con los numeros de entrada y salida
-	C = 5;
+	T = 10; //medida de la caja con los numeros de entrada y salida
+	P = 5; //pantallas
 type
-	caja = record
-			x,y:string;
-	end;
 	pantalla = record
 			num,posx,posy:integer;
-			dir:char;
+			dir:string;
 			encontrado:boolean;
 	end;
-
-	pantallas = array [1..C] of pantalla;
-	cajaNegra = array [1..L,1..L] of shortstring;
-
-procedure llenarCaja(var caja: cajaNegra; p:pantallas; const C:integer); //nuevo llenar caja
-var i,k,x,y:integer; //agragar la j
-begin
-	k := 11; //es la medida de la caja negra
-	//CAJA
-	for i:= 1 to C do
-	begin
-		x:= p[i].posx ;
-		y:= p[i].posy ;
-		caja[x,y]:= p[i].dir;
+	JugadorData = record
+			NroDisparos, puntaje, EspejosHayados:integer;
+			Nombre: string;
 	end;
-	//SALIDA
-		//LATERALES
-	for i:= 2 to k do	//lateral izquierdo
-		caja[i,1]:= IntToStr(k - i);
-	for i:= 2 to k do	//lateral izquierdo
-		caja[i,k+1]:= IntToStr(18 + i);
-		//SUP Y INF
-	for i:= 2 to k do	//parte superior
-		caja[1,i]:= IntToStr(8 + i);
-	for i:= 2 to k do	//parte inferior
-		caja[k + 1,i]:= IntToStr(41 - i);
+	pantallas = array [1..P] of pantalla;
+	cajaNegra = array [1..T,1..T] of shortstring;
+
+//	------PROCEDIMIENTOS DEL PROGRAMA PRINCIPAL------
+//	------	pantalla principal del juego	------
+procedure PantallaInicio();
+	//	----procedimiento para centrar los texto----
+	function CentrarTexto(texto:string):string;
+	var  ancho, i: Integer;
+	begin
+		ancho := (80 - Length(texto)) div 2; // 80 es el ancho de la pantalla
+		CentrarTexto := '';
+		for i := 1 to ancho do
+			CentrarTexto := CentrarTexto + ' ';
+		CentrarTexto := CentrarTexto + texto;
+	end;
+var	i:integer;
+Begin
+	writeln;writeln;
+	writeln(CentrarTexto('LASER TAG'));
+	writeln(CentrarTexto(''));
+	writeln(CentrarTexto('Trabajo practico integrador'));
+	writeln(CentrarTexto('by: Abril y Luz'));
+	writeln(CentrarTexto(''));
+	write('cargando juego: ');
+	for i:= 1 to 20 do
+	begin
+		write('❚');
+		delay(200);
+	end;
+	writeln;writeln;
+	writeln('press "S" for star');
+	readkey;
+End;
+
+//	------	inicializa los datos necesarios para el juego
+procedure inicializarJuego(var pant:pantallas; jugador:JugadorData; const P:integer);
+	//	----procedimiento para posicion de pantallas random----
+	procedure ubicacion(opcion:integer; var pant:pantallas; const P:integer);
+		function conversor(n:integer):integer;
+		var x,y:integer;
+		begin
+			x:= 10;
+			y:= 9;
+			if (n >= 0) or (n <= 9) then 
+				conversor:= x - n
+			else if (n >= 10) or (n <= 19) then
+				conversor:= n - y;
+			end;
+	var i,n,x,y,dire:integer;
+	Begin
+		n:=0;
+		if opcion = 1 then
+		Begin
+			writeln;
+			writeln('Jugador 1, cargue la pposicion de las pantallas');
+			writeln;
+			for i:= 1 to P do
+			begin
+				pant[i].num:= i;
+				pant[i].encontrado:= false;
+				writeln('ingrese la coordena de 0 a 9:');
+				readln(x);
+				pant[i].posX:= conversor(x);
+				writeln('ingrese la coordena de 10 a 19:');
+				readln(y);
+				pant[i].posY:= conversor(y);
+				writeln('ingrese la direccion: ');
+				writeln('1. derecha');
+				writeln('2.izquierda');
+				readln(dire);
+				if (dire = 1) then pant[i].dir:= '/'
+				else if (n = 2) then pant[i].dir:= '\';
+			end;
+		end
+		else if opcion = 2 then
+		Begin
+			for i:= 1 to P do
+			begin
+				pant[i].num:= i;
+				pant[i].encontrado:= false;
+				n:= random(11) + 1;
+				if (n = 0) then pant[i].posX:= (n + 1)
+				else pant[i].posX:= n;
+				n:= random(11) + 1;
+				if (n = 0) then pant[i].posY:= (n + 1)
+				else pant[i].posY:= n;
+				n:=0;
+				n:= random(2);
+				if (n = 0) then pant[i].dir:= '/'
+				else if (n = 1) then pant[i].dir:= '\';
+			end;
+		End;
+	end;	
+var respuesta: byte;
+Begin
+	writeln;
+	writeln('¿cuantos jugadores?');
+	writeln('1 o 2');
+	writeln;
+	readln(respuesta);
+	ubicacion(respuesta,pant,P);
+	clrscr;
+	writeln;
+	writeln('Nivel');
+	writeln('1. 20 disparos');
+	writeln('2. 10 disparos');
+	writeln;
+	readln(respuesta);
+	case respuesta of
+			1 : jugador.NroDisparos:= 20;
+			2 : jugador.NroDisparos:= 10;
+	end;
+	writeln;
+	write('ingrese el nombre del jugador');
+	read(jugador.Nombre);
+	writeln;
+	jugador.puntaje:= 0;
+	jugador.EspejosHayados:= 0;
 end;
 
-{procedure llenarCaja(var caja: cajaNegra);
-var i,k,j:integer; //agragar la j
-begin
-	k := 11; //es la medida de la caja negra
-	//CAJA
-	for i:= 2 to k do
-	begin
-		for j:= 2 to k do //el 2 y el 11 son las posiciones dentre de la caja
-			caja[i,j]:= '/';
-	end;
-	//SALIDA
-		//LATERALES
-	for i:= 2 to k do	//lateral izquierdo
-		caja[i,1]:= IntToStr(k - i);
-	for i:= 2 to k do	//lateral izquierdo
-		caja[i,k+1]:= IntToStr(18 + i);
-		//SUP Y INF
-	for i:= 2 to k do	//parte superior
-		caja[1,i]:= IntToStr(8 + i);
-	for i:= 2 to k do	//parte inferior
-		caja[k + 1,i]:= IntToStr(41 - i);
-end;}
+//	------juego------
+procedure juego(var cn:cajaNegra; var pant:pantallas; var jugador:JugadorData; const P,T:integer);
+	//	------
+	Procedure MostrarMatriz (Var cn:cajaNegra; const T:integer);
+	Var i,j:Integer;
+	Begin
+		WriteLn;
+		WriteLn('   10 11 12 13 14 15 16 17 18 19  ');
+		WriteLn('    __ __ __ __ __ __ __ __ __ __  ');
+		For i:= 1 to T do
+		Begin
+			Write(10 - i,' ');
+			Write('|');
+			For j:=1 to T do
+			Begin
+				Write(cn[i,j]:2);
+				Write(' ');
+			End;
+			Write('|');
+			Write(' ', 19 + i);
+			WriteLn;
+		End;
+		WriteLn('   __ __ __ __ __ __ __ __ __ __  ');
+		WriteLn('   39 38 37 36 35 34 33 32 31 30  ');
+	End;
 
-procedure dibujarCaja(caja: cajaNegra; const L:integer); //este es el nuevo dibujar
-var i,j: integer;
-begin
-	for i:= 1 to L do
+	function MenuOpciones():byte;
 	begin
-		for j:= 1 to L do
+		writeln('(1).disparar  (2).adivinar  (3).salir');
+		ReadLn(MenuOpciones);
+	end;
+
+	procedure disparar(var pant:pantallas; var cn:cajaNegra; var jugador:JugadorData; const T,P:integer);
+		procedure conversor( entrada:integer);
+	var i,j:integer;
+		dire:string;
+	Begin
+		case entrada of
+				0 .. 9	: dire:= '>';
+				10 .. 19: dire:= '⌄';
+				20 .. 29: dire:= '<';
+				30 .. 39: dire:= '⌃';
+		else writeln('la opcion ingresada no es la correcta');
+		end;
+		if dire = '>' then
 		begin
-			if (i > 1) and (j > 1) and (i < L) then
+			i:= 10 - entrada;
+			j:= 1;
+		end
+		else if dire = '⌄' then
+		begin
+			i:= 1;
+			j:= entrada - 9;
+		end
+		else if dire = '<' then
+		begin
+			i:= entrada - 19;
+			j:= 10;
+		end
+		else if dire = '⌃' then
+		begin
+			i:= 10;
+			j:= 40 - entrada;
+		end;
+		writeln('la direccion es: ', dire, ' posicion: ',i,' ',j);
+	End;
+
+	procedure adivinar(var pant:pantallas; var cn:cajaNegra; var jugador:JugadorData; const T,P:integer);
+		procedure conmprobar(x,y: integer;dire:byte; var pant:pantalla; const P,resultado);
+		var i,j,xaux,yaux:integer;
+			direaux:char;
+		Begin
+			xaux:= 10 - x;
+			yaux:= y - 9;
+			if dire = 1 then direaux := '/'
+			else if dire = 2 then direaux := '\';
+
+			for i:= 1 to P do
 			begin
-			write('|');
-			Write(caja[i,j]:2);
-			end
-			else 
-			begin
-			write(' ');
-			Write(caja[i,j]:2);
+				If (xaux = pant.posX[i]) and (yaux = pant.posY[i]) and (direaux = pant.dir[i]) then
+				Begin
+					pant.encontrado:= True; 
+					WriteLn('¡FELICIDADES! La Opcion ingresada es Correcta ');
+					Jugador.Puntaje := Jugador.Puntaje + 2;
+					CN[pant.posx[i],pant.posy[i]] := pant.dir[i];
+				End
+				else writeln('¡PERDISTE! La opcion ingresada no es la Correcta');
 			end;
 		end;
-		if (j < L) then
-			Write('|');
-		WriteLn;
-	end;
-end;
-
-{procedure dibujarCaja(caja: cajaNegra; const L:integer);
-var i,j: integer;
-begin
-	for i:= 1 to L do
+	End;
+	var x,y:integer;
+		dire:byte;
 	begin
-		for j:= 1 to L do
-		begin
-			write('|');
-			Write(caja[i,j]:2);
-		end;
-		Write('|');
+		WriteLn('¡ADVERTENCIA!');
+		WriteLn('Solo posee un intento...');
 		WriteLn;
+		WriteLn('ingrese la coordenada donde cree que esta la pantalla');
+		WriteLn('entre 0 y 9');
+		readln(x);
+		WriteLn('ingrese la coordenada donde cree que esta la pantalla');
+		WriteLn('entre 10 y 19');
+		readln(y);
+		WriteLn('ingrese la direccion que tiene la pantalla');
+		WriteLn('1.derecha(/)  2.izquierda(\)');
+		readln(dire);
+		comprobador(x,y,dire,pant,P);
 	end;
-end;}
-
-procedure ubicarPantallas(var p:pantallas; const C:integer);
-var i,n:integer;
-begin
-	for i:= 1 to C do
+	
+	procedure disparar(var pant:pantallas; var cn:cajaNegra; var jugador:JugadorData; const T,P:integer);
 	begin
-		p[i].num :=	i;
-		p[i].encontrado :=	false;
-		n := random(12) + 1;
-		if (n = 1) then p[i].posx := n + 1
-		else if (n = 12) then p[i].posx := n - 1
-		else p[i].posx := n;
-		n:= random(11) + 1;
-		if (n = 1) then p[i].posy := n + 1
-		else if (n = 12) then p[i].posy := n - 1
-		else p[i].posy := n;
-		n:= 0; //se le reasigna el cero, ya que en muchas pruebas el numero no cambiaba en los for
-		n:= random(2);
-		if (n = 0) then p[i].dir := '/'
-		else if (n = 1) then p[i].dir := '\';
+	writeln('PAW');
+	jugador.NroDisparos := jugador.NroDisparos - 1;
 	end;
-end;
-procedure tabla(p:pantallas; const C:Integer);
-var i:integer;
-begin
-	for i:= 1 to C do
-		WriteLn(p[i].num:2,'|',p[i].encontrado:2,'|',p[i].posx:2,'|',p[i].posy:2,'|',p[i].dir:2);
-end;
+var entrada,respuesta:integer;
+	opcion: byte;
+BEGIN
+	opcion:= 0;
+	//	----primer while del juego
+	While (jugador.NroDisparos = 0) or (jugador.EspejosHayados = 5) or (opcion = 3) do
+	begin
+		MostrarMatriz(cn,T);
+		opcion := MenuOpciones;
+		if opcion = 1 then
+			disparar(pant,cn,jugador,T,P)
+		else if opcion = 2 then
+			adivinar(pant,cn,jugador,T,P);
+	end;
+END;
+
+//	------PROGRAMA PRINCIPAL------
 var cn:		cajaNegra;
 	pant:	pantallas;
-
+	jugador:JugadorData;
 BEGIN
-	ubicarPantallas(pant,C);
-	llenarCaja(cn,pant,C);
-	dibujarCaja(cn,L);
-	WriteLn;
-	//ubicarPantallas(pant,C);
-	tabla(pant,C);
+	Randomize();
+	PantallaInicio();
+	clrscr;
+    inicializarJuego(pant,jugador,P);
+	clrscr;
+	juego(cn,pant,jugador,P,T);
 END.
