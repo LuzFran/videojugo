@@ -67,7 +67,7 @@ procedure inicializarJuego(var pant:pantallas; jugador:JugadorData; const P:inte
 	var i,n,x,y,dire:integer;
 	Begin
 		n:=0;
-		if opcion = 1 then
+		if opcion = 2 then
 		Begin
 			writeln;
 			writeln('Jugador 1, cargue la pposicion de las pantallas');
@@ -92,7 +92,7 @@ procedure inicializarJuego(var pant:pantallas; jugador:JugadorData; const P:inte
 		end
 		else if opcion = 2 then
 		Begin
-			for i:= 1 to P do
+			for i:= 2 to P do
 			begin
 				pant[i].num:= i;
 				pant[i].encontrado:= false;
@@ -129,16 +129,13 @@ Begin
 			2 : jugador.NroDisparos:= 10;
 	end;
 	writeln;
-	write('ingrese el nombre del jugador');
+	write('ingrese el nombre del jugador ');
 	read(jugador.Nombre);
 	writeln;
-	jugador.puntaje:= 0;
-	jugador.EspejosHayados:= 0;
 end;
 
 //	------juego------
-procedure juego(var cn:cajaNegra; var pant:pantallas; var jugador:JugadorData; const P,T:integer);
-	//	------
+procedure juego(var cn:cajaNegra ;var pant:pantallas; var jugador:JugadorData; const P,T:integer);
 	Procedure MostrarMatriz (Var cn:cajaNegra; const T:integer);
 	Var i,j:Integer;
 	Begin
@@ -161,73 +158,41 @@ procedure juego(var cn:cajaNegra; var pant:pantallas; var jugador:JugadorData; c
 		WriteLn('   __ __ __ __ __ __ __ __ __ __  ');
 		WriteLn('   39 38 37 36 35 34 33 32 31 30  ');
 	End;
-
 	function MenuOpciones():byte;
 	begin
 		writeln('(1).disparar  (2).adivinar  (3).salir');
 		ReadLn(MenuOpciones);
 	end;
-
-	procedure disparar(var pant:pantallas; var cn:cajaNegra; var jugador:JugadorData; const T,P:integer);
-		procedure conversor( entrada:integer);
-	var i,j:integer;
-		dire:string;
-	Begin
-		case entrada of
-				0 .. 9	: dire:= '>';
-				10 .. 19: dire:= '⌄';
-				20 .. 29: dire:= '<';
-				30 .. 39: dire:= '⌃';
-		else writeln('la opcion ingresada no es la correcta');
-		end;
-		if dire = '>' then
-		begin
-			i:= 10 - entrada;
-			j:= 1;
-		end
-		else if dire = '⌄' then
-		begin
-			i:= 1;
-			j:= entrada - 9;
-		end
-		else if dire = '<' then
-		begin
-			i:= entrada - 19;
-			j:= 10;
-		end
-		else if dire = '⌃' then
-		begin
-			i:= 10;
-			j:= 40 - entrada;
-		end;
-		writeln('la direccion es: ', dire, ' posicion: ',i,' ',j);
-	End;
-
 	procedure adivinar(var pant:pantallas; var cn:cajaNegra; var jugador:JugadorData; const T,P:integer);
-		procedure conmprobar(x,y: integer;dire:byte; var pant:pantalla; const P,resultado);
-		var i,j,xaux,yaux:integer;
-			direaux:char;
+		procedure comprobador(var x,y: integer;dire:String; var pant:pantallas; const P:integer);
+		var i,auxX,auxY:integer;
+			direaux:String;
 		Begin
-			xaux:= 10 - x;
-			yaux:= y - 9;
-			if dire = 1 then direaux := '/'
-			else if dire = 2 then direaux := '\';
+			x:= 10 - x;
+			y:= y - 9;
+			if dire = '1' then dire := '/'
+			else if dire = '2' then dire := '\';
 
-			for i:= 1 to P do
+			for i:= 1 to 5 do
 			begin
-				If (xaux = pant.posX[i]) and (yaux = pant.posY[i]) and (direaux = pant.dir[i]) then
+				auxX:= pant[i].posX;
+				auxY:= pant[i].posY;
+				direaux := pant[i].dir;
+				
+				if (x = auxX) and (y = auxY) and (direaux = dire) then
 				Begin
-					pant.encontrado:= True; 
+					pant[i].encontrado:= True; 
 					WriteLn('¡FELICIDADES! La Opcion ingresada es Correcta ');
 					Jugador.Puntaje := Jugador.Puntaje + 2;
-					CN[pant.posx[i],pant.posy[i]] := pant.dir[i];
-				End
+					CN[pant[i].posX,pant[i].posY] := pant[i].dir;
+				end
 				else writeln('¡PERDISTE! La opcion ingresada no es la Correcta');
 			end;
 		end;
-	End;
+	
+	
 	var x,y:integer;
-		dire:byte;
+		dire:String;
 	begin
 		WriteLn('¡ADVERTENCIA!');
 		WriteLn('Solo posee un intento...');
@@ -244,33 +209,29 @@ procedure juego(var cn:cajaNegra; var pant:pantallas; var jugador:JugadorData; c
 		comprobador(x,y,dire,pant,P);
 	end;
 	
-	procedure disparar(var pant:pantallas; var cn:cajaNegra; var jugador:JugadorData; const T,P:integer);
-	begin
-	writeln('PAW');
-	jugador.NroDisparos := jugador.NroDisparos - 1;
-	end;
-var entrada,respuesta:integer;
-	opcion: byte;
-BEGIN
+	
+var //entrada, respuesta:integer;
+	opcion:byte;
+Begin
 	opcion:= 0;
-	//	----primer while del juego
-	While (jugador.NroDisparos = 0) or (jugador.EspejosHayados = 5) or (opcion = 3) do
-	begin
-		MostrarMatriz(cn,T);
-		opcion := MenuOpciones;
-		if opcion = 1 then
-			disparar(pant,cn,jugador,T,P)
-		else if opcion = 2 then
-			adivinar(pant,cn,jugador,T,P);
-	end;
-END;
-
+	MostrarMatriz(cn,T);
+	opcion:= MenuOpciones;
+	if opcion = 1 then
+		disparar(pant,cn,jugador,T,P)
+	else if opcion = 2 then
+		adivinar (pant,cn,jugador,T,P);
+end;
 //	------PROGRAMA PRINCIPAL------
 var cn:		cajaNegra;
 	pant:	pantallas;
 	jugador:JugadorData;
 BEGIN
 	Randomize();
+	Jugador.NroDisparos:= 0;
+	Jugador.puntaje:= 0;
+	Jugador.EspejosHayados:= 0;
+	Jugador.NroDisparos:= 0;
+	Jugador.Nombre:= ' ';
 	PantallaInicio();
 	clrscr;
     inicializarJuego(pant,jugador,P);
