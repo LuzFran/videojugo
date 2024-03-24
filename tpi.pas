@@ -1,4 +1,3 @@
-
 program Integrador;
 uses Crt;
 
@@ -17,7 +16,6 @@ Type
 	end;
 	TTPantallas = array [1..Espejos] of TTEspejos;
 	TTMatriz = array [1..Filas,1..Columnas] of shortstring;
-
 //	------ INICIO PROCEDIMIENTO INICIALIZAR------
 procedure Inicializar (var M:TTMatriz; var Jugador:TTJugador);
 var i,j:integer;
@@ -46,7 +44,7 @@ end;
 procedure PantallaInicio(var Jugador:TTJugador);
 var i:integer;
 Begin
-    textcolor(Blue);
+    textcolor(LightCyan);
 	writeln;
 	writeln(CentrarTexto('LASER TAG'));
 	writeln('');
@@ -65,22 +63,20 @@ Begin
 	read(Jugador.Nombre);
 	writeln;writeln;
 	writeln('Press "S" for strarting');
-	 textcolor(White);
+	textcolor(White);
 	readkey;
 end;
 //	------   FIN PROCEDIMIENTO PANTALLA DE INICIO  ------
 //	------ INICIO PROCEDIMIENTO MENU DE OPCIONES ------
 procedure MenuOpciones(var pantalla:TTPantallas; var Jugador:TTJugador;const Espejos:integer);
-
 var opciones:byte;
 	i,x,y:integer;
 Begin
-    textcolor(Blue);
+    textcolor(LightCyan);
 	writeln;
 	writeln(CentrarTexto('Ingrese el Nivel'));
 	writeln(CentrarTexto('1. Nivel 1     2. Nivel 2'));
 	ReadLn(opciones);
-
 	case opciones of
 				1: begin
 					writeln;
@@ -95,14 +91,12 @@ Begin
 					delay(3000);
 					end;
 	end;
-
 	writeln;
 	writeln(CentrarTexto('Ingrese cuantos jugadores'));
 	writeln(CentrarTexto('1.   1 jugador (La posicion de los espejos son Aleatorios)'));
 	writeln(CentrarTexto('2.   2 jugadores (La posicion de los espejos son Puestas)'));
 	writeln(CentrarTexto('Por el segundo Jugador'));
 	ReadLn(opciones);
-
 	case opciones of
 				1: begin
 					for i:= 1 to Espejos do
@@ -138,72 +132,9 @@ Begin
 					end;
 					end;
 	end;
- textcolor(White);
+	textcolor(White);
 end;
 //	------   FIN PROCEDIMIENTO MENU DE OPCIONES  ------
-//	------ INICIO PROCEDIMIENTO JUEGO ------
-{procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integer;var Matriz:TTMatriz);
-	Procedure MostrarMatriz (Var M:TTMatriz;Var JJ:TTJugador);
-	Var	i,j:Integer;
-	Begin
-		WriteLn;
-		WriteLn('Bienvenido! ',JJ.Nombre);
-		WriteLn;
-		Write('   | Puntos:',JJ.Puntuacion,'| Nro de Disparos:',JJ.NroDisparos,'| Espejos Encontrados:',JJ.EspejosEncontrados,'|');
-		WriteLn;
-		WriteLn;
-		WriteLn('   10 11 12 13 14 15 16 17 18 19  ');
-		WriteLn('   __ __ __ __ __ __ __ __ __ __   ');
-		For i:= 1 to Filas do
-	    Begin
-			Write(10 - i,' ');
-			Write('|');
-			For j:=1 to Columnas do
-			Begin
-				Write(M[i,j]:2);
-				Write(' ');
-			End;
-			Write('|');
-			Write(' ', 19 + i);
-			WriteLn;
-		End;
-		WriteLn('   __ __ __ __ __ __ __ __ __ __   ');
-		WriteLn('   39 38 37 36 35 34 33 32 31 30  ');
-		WriteLn;
-		writeln('(1).Disparar  (2).Estimar Espejos  (3).Salir');
-	End;
-var i,x,y,d,halladas:  integer;
-Begin
-	halladas:= 0;
-	while (halladas <> 5) do
-	begin
-		mostrarMatriz(Matriz,Jugador);
-		writeln('ingrese la posicion que cree que esta el espejo entre 0 y 9');
-		ReadLn(y);
-		y:= 10 - y;
-		writeln('ingrese la posicion que cree que esta el espejo entre 10 y 19');
-		ReadLn(x);
-		x:= x - 9;
-		writeln('ingrese la direccion que cree que esta el espejo');
-		writeln('1. derecha  2. izquierda');
-		ReadLn(d);
-		for i:= 1 to Espejos do
-		begin
-			if (x = Pantalla[i].x) and (y = Pantalla[i].y) and (d = Pantalla[i].dir) then
-			begin
-				Jugador.EspejosEncontrados+= 1;
-				writeln('¡FELICIDADES! Encontraste el espejo nro ', i);
-				Jugador.Puntuacion += 2;
-				if (d = 1) then Matriz[y,x]:= '/'
-				else if (d = 2) then Matriz[y,x]:= '\';
-				halladas+=1;
-			end
-			else writeln('¡FALLASTE! los datos ingresados son incorrectos');
-		end;
-	end;
-end;}
-//	------   FIN PROCEDIMIENTO JUEGO  ------
-
 //	------ INICIO PROCEDIMIENTO JUEGO------
 procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integer;var Matriz:TTMatriz);
 	//	------ INICIO SUBPROCEDIMIENTO MOSTRAR LA MATRIZ ------
@@ -211,11 +142,14 @@ procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integ
 	Var	i,j:Integer;
 	Begin
 		WriteLn;
+		TextColor(LightBlue);
 		WriteLn('Bienvenido! ',JJ.Nombre);
 		WriteLn;
+		TextColor(Cyan);
 		Write('   | Puntos:',JJ.Puntuacion,'| Nro de Disparos:',JJ.NroDisparos,'| Espejos Encontrados:',JJ.EspejosEncontrados,'|');
 		WriteLn;
 		WriteLn;
+		TextColor(LightGreen);
 		WriteLn('   10 11 12 13 14 15 16 17 18 19  ');
 		WriteLn('   __ __ __ __ __ __ __ __ __ __   ');
 		For i:= 1 to Filas do
@@ -234,7 +168,22 @@ procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integ
 		WriteLn('   __ __ __ __ __ __ __ __ __ __   ');
 		WriteLn('   39 38 37 36 35 34 33 32 31 30  ');
 		WriteLn;
+		TextColor(White);
 	End;
+	
+	Procedure NotificarSalida(Filas:Integer;Columnas:Integer;Entradas:Integer);
+	Begin
+	if Columnas = 11 then 
+	writeln ('El Laser entro por :',Entradas,' y Salio por: ',Filas + 19)
+	else if Filas = 11 then 
+	writeln ('El Laser entro por :',Entradas,' y Salio por: ',40 - Columnas)
+	else if Columnas = 0 then 
+	writeln ('El Laser entro por :',Entradas,' y Salio por: ', 10 - Filas)
+	else if Filas = 0 then 
+	writeln ('El Laser entro por :',Entradas,' y Salio por: ',Columnas + 9)
+	End;
+	
+	
 	//	------   FIN SUBPROCEDIMIENTO MOSTRAR LA MATRIZ  ------
 	//	------ INICIO SUBPROCEDIMIENTO ESTIMAR ------
 	procedure Estimar(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integer);
@@ -249,7 +198,7 @@ procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integ
 		ReadLn(x);
 		x:= x - 9;
 		writeln('Ingrese la direccion que cree que esta el espejo');
-		writeln('1. derecha  2. izquierda');
+		writeln('1. derecha(/)  2. izquierda(\)');
 		ReadLn(d);
 		for i:= 1 to Espejos do
 		begin
@@ -260,7 +209,7 @@ procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integ
 				writeln('¡FELICIDADES! Encontraste el espejo nro ', i);
 				textcolor(White);
 				Jugador.Puntuacion += 2;
-                Jugador.EspejosEncontrados +=1;
+                inc(Jugador.EspejosEncontrados);
 				if (d = 1) then Matriz[y,x]:= '/'
 				else if (d = 2) then Matriz[y,x]:= '\';
 				estado:= true;
@@ -275,97 +224,175 @@ procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integ
 	//	------   FIN SUBPROCEDIMIENTO ESTIMAR  ------
 	//	------ INICIO SUBPROCEDIMIENTO DISPARAR ------
 	Procedure Disparar (Var Pantalla:TTPantallas;Var Jugador:TTJugador;Const Espejos:Integer);
-		//	------ INICIO SUBPROCEDIMIENTO notificaion ------
-		Procedure NotificarSalida(Fila:Integer;Columna:Integer;Entrada:Integer);
-		Begin
-			If (Fila = 11)then
-			Begin
-				WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ',49 - Entrada);
-			End;
-			If (Fila=0)Then
-			Begin
-				WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ', 49 - Entrada ); 
-			End;
-			If(Columna=11)Then
-			Begin
-				WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ',29 - Entrada);
-			End;
-			If (Columna=0)then
-			Begin
-				WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ', 29 - Entrada);
-			End;
-		End;
-		//	------   FIN SUBPROCEDIMIENTO notificaion  ------	
-	Var Entrada:Integer;
-	//AuxEntrada:String;
-	Filas,Columnas:Integer;
+	var Entrada,Fila,Columna,i:integer;
+		dire:string;
+		Salida:boolean;
 	Begin
-		Filas:=0;
-		Columnas:=0;
-		WriteLn('Ingrese por donde desea disparar el lazer..(0..39)');
-		ReadLn(Entrada);
+		Jugador.Puntuacion+=2;
 		Dec(Jugador.NroDisparos);
-		Case Entrada Of
-			0..9:	Begin
-			//AuxEntrada:='Izquierda';
-					Filas:= 10  - Entrada; //Convierte
-					Columnas:=1;
-					WriteLn('Fila',Filas,'Columna',Columnas );
-					while (Columnas <> 11) do
-					begin
-						WriteLn('Fila: ',Filas,' Columna: ',Columnas);
-						Inc(Columnas);
-						delay(200);
-					end;
-					NotificarSalida(Filas,Columnas,Entrada);
-					End;
-			10..19:	Begin
-			//AuxEntrada:= 'Arriba';
-					Filas:=1;
-					Columnas:=Entrada - 9;
-					WriteLn('Fila',Filas,'Columna',Columnas);
-					while (Filas <> 11) do
-					begin
-						WriteLn('Fila: ',Filas,' Columna: ',Columnas);
-						Inc(Filas);
-						delay(200);
-					end;
-					NotificarSalida(Filas,Columnas,Entrada);
-					End;
-			20..29:	Begin
-			//AuxEntrada:='Derecha';
-					Filas:=Entrada - 10;
-					Columnas:=10;
-					WriteLn('Fila ',Filas,'Columna ',Columnas );
-					while (Filas <> 0) do
-					begin
-						WriteLn('Fila: ',Filas,' Columna: ',Columnas);
-						Dec(Filas);
-						delay(200);
-					end;
-					NotificarSalida(Filas,Columnas,Entrada);
-					End;
-			30..39:	Begin
-			//AuxEntrada:='Abajo';
-						Filas:=10;
-						Columnas:=Entrada -  29;
-						WriteLn('Fila ',Filas,'Columna ',Columnas );
-						while (Columnas <> 0) do
-						begin
-							WriteLn('Fila: ',Filas,' Columna: ',Columnas);
-							Dec(Columnas);
-							delay(200);
+		For i:=1 to Espejos do
+		Writeln('Fila:', Pantalla[i].y, 'Columnas:', Pantalla[i].x, 'Direccion:', Pantalla[i].dir);
+		Fila:= 0;
+		Columna:= 0;
+		writeln('Ingrese por donde desea disparar el lazer..(0..39)');
+		ReadLn(Entrada);
+			case Entrada of 
+					0..9: begin
+						dire := '>';
+						Fila:= 10 - Entrada;
+						Columna:= 1;
+						delay(3000);
+						WriteLn('Fila ',Fila,'Columna ',Columna );						
 						end;
-						NotificarSalida(Filas,Columnas,Entrada);
-					End;
-		End;
-	end;
+					10..19:begin
+						dire := '⌄';
+						Fila:= 1;
+						Columna:= Entrada - 9;
+						WriteLn('Fila ',Fila,'Columna ',Columna );
+						delay(3000);
+						end;
+					20..29:begin
+						dire := '<';
+						Fila:= Entrada-19 ;
+						Columna:= 10;
+						WriteLn('Fila ',Fila,'Columna ',Columna );
+						delay(3000);
+						end;
+					30..39:begin
+						dire := '⌃';
+						Fila:= 10;
+						Columna:= 40 - Entrada;
+						WriteLn('Fila ',Fila,'Columna ',Columna );
+						delay(3000);
+						end;
+			end;
+		Salida:= false;
+		While Salida = False do
+		begin
+			for i:= 1 to Espejos do
+			begin
+				if (Pantalla[i].x = Columna) and (Pantalla[i].y = Fila) then
+				begin
+					Case Pantalla[i].dir of
+						1:	Begin //DERECHA
+						    WriteLn('Reboto');
+						    delay(3000);
+							if dire = '>' then 
+							begin
+								dire:= '⌃';
+								WriteLn('Fila ',Fila,'Columna ',Columna );
+								delay(3000);
+								Dec(Fila);									
+							end
+							else if dire = '⌄' then 
+							begin
+							WriteLn('Reboto');
+							delay(3000);
+								dire:= '<';
+								WriteLn('Fila ',Fila,'Columna ',Columna );
+								delay(3000);
+								Dec(Columna);
+							end
+							else if dire = '<' then 
+							begin
+							WriteLn('Reboto');
+							delay(3000);
+								dire:= '⌄';
+								WriteLn('Fila ',Fila,'Columna ',Columna );
+								delay(3000);
+								Inc(Fila);
+							end
+							else if dire = '⌃' then 
+							begin
+							WriteLn('Reboto');
+							delay(3000);
+								dire:= '>';
+								WriteLn('Fila ',Fila,'Columna ',Columna );
+								delay(3000);
+								Inc(Columna);
+							End;
+								End;
+						2: 	Begin  //IZQUIERDA
+							if dire = '>' then 
+							begin
+							WriteLn('Reboto');
+							delay(3000);
+								dire:= '⌄';
+								WriteLn('Fila ',Fila,'Columna ',Columna );
+								delay(3000);
+								Inc(Fila);
+							end
+							else if dire = '⌄' then 
+							begin
+							WriteLn('Reboto');
+							delay(3000);
+								dire:= '>';
+								WriteLn('Fila ',Fila,'Columna ',Columna );
+								delay(3000);
+								Inc(Columna);
+							end
+							else if dire = '<' then 
+							begin
+							WriteLn('Reboto');
+							delay(3000);
+								dire:= '⌃';
+								WriteLn('Fila ',Fila,'Columna ',Columna );
+								delay(3000);
+								Dec(Fila);
+							end
+							else if dire = '⌃' then 
+							begin
+							WriteLn('Reboto');
+							delay(3000);
+								dire:= '<';
+								WriteLn('Fila ',Fila,'Columna ',Columna );
+								delay(3000);
+								Dec(Columna);
+							end;
+								End;
+					end; //del case
+				end//del begin if
+				else begin
+					if dire = '>' then 
+					begin
+					WriteLn('Fila ',Fila,'Columna ',Columna );
+					delay(3000);
+						Inc(Columna);
+						if columna = 11 then salida := true;
+					end
+					else if dire = '⌄' then 
+					begin
+					WriteLn('Fila ',Fila,'Columna ',Columna );
+					delay(3000);
+						Inc(Fila);
+						if Fila = 11 then salida := true;
+					end
+					else if dire = '<' then
+					begin
+					WriteLn('Fila ',Fila,'Columna ',Columna );
+						Dec(Columna);
+						delay(3000);
+						if columna = 0 then salida := true;
+					end
+					else if dire = '⌃' then 
+					begin
+					WriteLn('Fila ',Fila,'Columna ',Columna );
+						Dec(Fila);
+						delay(3000);
+						if Fila = 0 then salida := true;
+					end;
+				end;
+			end;// del begin for
+		end;// del begin while
+		NotificarSalida(Fila,Columna,Entrada);
+	end; //del begin del procedimiento
 	//	------   FIN SUBPROCEDIMIENTO DISPARAR  ------
 var opciones:string;
 Begin
 	opciones:= '0';
 	repeat 
 		MostrarMatriz(Matriz,Jugador);
+		TextColor(LightGray);
 		writeln('(1).Disparar  (2).Estimar Espejos  (3).Salir');
 		ReadLn(opciones);
 		case opciones of
@@ -375,25 +402,40 @@ Begin
 	until (Jugador.NroDisparos = 0) or (opciones = '3');
 end;
 //	------ FIN PROCEDIMIENTO JUEGO ------	
-	
-	
-	
-	
-//Procure EspejosRebotar(Var Pantalla:TTPantallas;Var Jugador:TTJugador;Var Direccion:String; Const Espejos:Integer);
-////Begin
-//End;
-// pertenecia a procedimiento juego
+Procedure Perdiste(Jugador:TTJugador);
+Begin
+    TextColor(LightRed);
+	writeln(CentrarTexto('PERDISTE EL JUEGO!!!'));
+	writeln('');
+	writeln('                           Nombre del Jugador: ',Jugador.Nombre);
+	writeln('                           Numero de Disparos: ',Jugador.NroDisparos);
+	writeln('                           Espejos Encontrados: ',Jugador.EspejosEncontrados);
+	writeln('                           Puntuacion: ',Jugador.Puntuacion);
+	writeln('');
+	WriteLn;
+    WriteLn;
+    WriteLn;
+    WriteLn;
+    WriteLn(CentrarTexto('GRACIAS POR JUGAR...'));
+End;
 
+Procedure Ganaste(Jugador:TTJugador);
+Begin
+textcolor(Yellow);
+	writeln(CentrarTexto('GANASTE EL JUEGO!!!'));
+	writeln('');
+    writeln('                           Nombre del Jugador: ',Jugador.Nombre);
+	writeln('                           Numero de Disparos: ',Jugador.NroDisparos);
+	writeln('                           Espejos Encontrados: ',Jugador.EspejosEncontrados);
+	writeln('                           Puntuacion: ',Jugador.Puntuacion);
+	writeln('');
+	WriteLn;
+    WriteLn;
+    WriteLn;
+    WriteLn;
+    WriteLn(CentrarTexto('GRACIAS POR JUGAR...'));
+End;
 
-
-
-
-//	------ INICIO ------
-
-//	------ FIN ------
-//	------ INICIO ------
-
-//	------ FIN ------
 var 
 	MMatriz:TTMatriz;
 	JJugador:TTJugador;
@@ -406,4 +448,11 @@ BEGIN
 	MenuOpciones(PPantallas,JJugador,Espejos);
 	clrscr;
 	juego(PPantallas,JJugador,Espejos,MMatriz);
+	Delay(2000);
+	clrscr;
+	If(JJugador.EspejosEncontrados = 5)Then
+	Ganaste(JJugador)
+	Else
+	Perdiste(JJugador);
 END.
+
