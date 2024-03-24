@@ -203,8 +203,10 @@ Begin
 	end;
 end;}
 //	------   FIN PROCEDIMIENTO JUEGO  ------
+
 //	------ INICIO PROCEDIMIENTO JUEGO------
 procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integer;var Matriz:TTMatriz);
+	//	------ INICIO SUBPROCEDIMIENTO MOSTRAR LA MATRIZ ------
 	Procedure MostrarMatriz (Var M:TTMatriz;Var JJ:TTJugador);
 	Var	i,j:Integer;
 	Begin
@@ -233,163 +235,159 @@ procedure juego(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integ
 		WriteLn('   39 38 37 36 35 34 33 32 31 30  ');
 		WriteLn;
 	End;
+	//	------   FIN SUBPROCEDIMIENTO MOSTRAR LA MATRIZ  ------
+	//	------ INICIO SUBPROCEDIMIENTO ESTIMAR ------
 	procedure Estimar(Pantalla:TTPantallas; var Jugador:TTJugador; const Espejos:integer);
 	var i,x,y,d:integer;
 		estado:boolean;
 	Begin
 		estado:= false;
+		writeln('Ingrese la Posicion que cree que esta el Espejo entre 0 y 9');
+		ReadLn(y);
+		y:= 10 - y;
+		writeln('Ingrese la Posicion que cree que esta el Espejo entre 10 y 19');
+		ReadLn(x);
+		x:= x - 9;
+		writeln('Ingrese la direccion que cree que esta el espejo');
+		writeln('1. derecha  2. izquierda');
+		ReadLn(d);
+		for i:= 1 to Espejos do
 		begin
-			writeln('Ingrese la Posicion que cree que esta el Espejo entre 0 y 9');
-			ReadLn(y);
-			y:= 10 - y;
-			writeln('Ingrese la Posicion que cree que esta el Espejo entre 10 y 19');
-			ReadLn(x);
-			x:= x - 9;
-			writeln('Ingrese la direccion que cree que esta el espejo');
-			writeln('1. derecha  2. izquierda');
-			ReadLn(d);
-			for i:= 1 to Espejos do
+			if (x = Pantalla[i].x) and (y = Pantalla[i].y) and (d = Pantalla[i].dir) then
 			begin
-				if (x = Pantalla[i].x) and (y = Pantalla[i].y) and (d = Pantalla[i].dir) then
-				begin
-					Jugador.EspejosEncontrados+= 1;
-					 textcolor(Yellow);
-					writeln('¡FELICIDADES! Encontraste el espejo nro ', i);
-					 textcolor(White);
-					Jugador.Puntuacion += 2;
-                    Jugador.EspejosEncontrados +=1;
-					if (d = 1) then Matriz[y,x]:= '/'
-					else if (d = 2) then Matriz[y,x]:= '\';
-
-					estado:= true;
-				end
-				
-			end;
-			 textcolor(red);
-			if estado = false then writeln('¡FALLASTE! los datos ingresados son incorrectos');
-			 textcolor(white);
+				Jugador.EspejosEncontrados+= 1;
+				textcolor(Yellow);
+				writeln('¡FELICIDADES! Encontraste el espejo nro ', i);
+				textcolor(White);
+				Jugador.Puntuacion += 2;
+                Jugador.EspejosEncontrados +=1;
+				if (d = 1) then Matriz[y,x]:= '/'
+				else if (d = 2) then Matriz[y,x]:= '\';
+				estado:= true;
+			end
 		end;
+		textcolor(red);
+		if estado = false then writeln('¡FALLASTE! los datos ingresados son incorrectos');
+		textcolor(white);
 		delay(2000);
 		clrscr;
 	end;
-	
-//Procure EspejosRebotar(Var Pantalla:TTPantallas;Var Jugador:TTJugador;Var Direccion:String; Const Espejos:Integer);
-////Begin
-
-
-
-//End;
-	
-Procedure NotificarSalida(Fila:Integer;Columna:Integer;Entrada:Integer);
+	//	------   FIN SUBPROCEDIMIENTO ESTIMAR  ------
+	//	------ INICIO SUBPROCEDIMIENTO DISPARAR ------
+	Procedure Disparar (Var Pantalla:TTPantallas;Var Jugador:TTJugador;Const Espejos:Integer);
+		//	------ INICIO SUBPROCEDIMIENTO notificaion ------
+		Procedure NotificarSalida(Fila:Integer;Columna:Integer;Entrada:Integer);
+		Begin
+			If (Fila = 11)then
+			Begin
+				WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ',49 - Entrada);
+			End;
+			If (Fila=0)Then
+			Begin
+				WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ', 49 - Entrada ); 
+			End;
+			If(Columna=11)Then
+			Begin
+				WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ',29 - Entrada);
+			End;
+			If (Columna=0)then
+			Begin
+				WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ', 29 - Entrada);
+			End;
+		End;
+		//	------   FIN SUBPROCEDIMIENTO notificaion  ------	
+	Var Entrada:Integer;
+	//AuxEntrada:String;
+	Filas,Columnas:Integer;
+	Begin
+		Filas:=0;
+		Columnas:=0;
+		WriteLn('Ingrese por donde desea disparar el lazer..(0..39)');
+		ReadLn(Entrada);
+		Dec(Jugador.NroDisparos);
+		Case Entrada Of
+			0..9:	Begin
+			//AuxEntrada:='Izquierda';
+					Filas:= 10  - Entrada; //Convierte
+					Columnas:=1;
+					WriteLn('Fila',Filas,'Columna',Columnas );
+					while (Columnas <> 11) do
+					begin
+						WriteLn('Fila: ',Filas,' Columna: ',Columnas);
+						Inc(Columnas);
+						delay(200);
+					end;
+					NotificarSalida(Filas,Columnas,Entrada);
+					End;
+			10..19:	Begin
+			//AuxEntrada:= 'Arriba';
+					Filas:=1;
+					Columnas:=Entrada - 9;
+					WriteLn('Fila',Filas,'Columna',Columnas);
+					while (Filas <> 11) do
+					begin
+						WriteLn('Fila: ',Filas,' Columna: ',Columnas);
+						Inc(Filas);
+						delay(200);
+					end;
+					NotificarSalida(Filas,Columnas,Entrada);
+					End;
+			20..29:	Begin
+			//AuxEntrada:='Derecha';
+					Filas:=Entrada - 10;
+					Columnas:=10;
+					WriteLn('Fila ',Filas,'Columna ',Columnas );
+					while (Filas <> 0) do
+					begin
+						WriteLn('Fila: ',Filas,' Columna: ',Columnas);
+						Dec(Filas);
+						delay(200);
+					end;
+					NotificarSalida(Filas,Columnas,Entrada);
+					End;
+			30..39:	Begin
+			//AuxEntrada:='Abajo';
+						Filas:=10;
+						Columnas:=Entrada -  29;
+						WriteLn('Fila ',Filas,'Columna ',Columnas );
+						while (Columnas <> 0) do
+						begin
+							WriteLn('Fila: ',Filas,' Columna: ',Columnas);
+							Dec(Columnas);
+							delay(200);
+						end;
+						NotificarSalida(Filas,Columnas,Entrada);
+					End;
+		End;
+	end;
+	//	------   FIN SUBPROCEDIMIENTO DISPARAR  ------
+var opciones:string;
 Begin
-If (Fila = 11)then
-Begin
-WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ',Columna + 49  );
-End;
-If (Fila=0)Then
-Begin
-WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ', 49 - Columna ); 
-End;
-If(Columna=11)Then
-Begin
-WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ',Fila + 19 );
-End;
-If (Columna=0)then
-Begin
-WriteLn('El Lazer fue lanzando desde: ',Entrada, 'Y Salio por: ', 29 - Fila );
-End;
-End;	
-	
-Procedure Disparar (Var Pantalla:TTPantallas;Var Jugador:TTJugador;Const Espejos:Integer);
-Var
-Entrada:Integer;
-AuxEntrada:String;
-Filas,Columnas:Integer;
-Begin
-Filas:=0;
-Columnas:=0;
-WriteLn('Ingrese por donde desea disparar el lazer..(0..39)');
-ReadLn(Entrada);
-Dec(Jugador.NroDisparos);
-Case Entrada Of
-0..9:
-Begin
-AuxEntrada:='Izquierda';
-Filas:= 10  - Entrada; //Convierte
-Columnas:=1;
-WriteLn('Fila',Filas,'Columna',Columnas );
-End;
-10..19:
-Begin
-AuxEntrada:= 'Arriba';
-Filas:=10;
-Columnas:=Entrada - 9;
-WriteLn('Fila',Filas,'Columna',Columnas );
-End;
-20..29:
-Begin
-AuxEntrada:='Derecha';
-Filas:=Entrada - 10;
-Columnas:=10;
-WriteLn('Fila ',Filas,'Columna ',Columnas );
-End;
-30..39:
-Begin
-AuxEntrada:='Abajo';
-Filas:=10;
-Columnas:=Entrada -  29;
-WriteLn('Fila ',Filas,'Columna ',Columnas );
-End;
-End;
-
-While (Filas <> 0) And (Columnas <> 0)And (Filas <> 11) And (Columnas <>11)do 
-Begin
-Case AuxEntrada Of
-'Izquierda':
-Begin
-Inc(Columnas);
-WriteLn('Fila ',Filas,'Columna ',Columnas );
-End;
-'Arriba':
-Begin
-
-Dec(Filas);
-WriteLn('Fila ',Filas,'Columna ',Columnas );
-End;
-'Derecha':
-Begin
-Dec(Columnas);
-WriteLn('Fila ',Filas,'Columna ',Columnas );
-End;
-'Abajo':
-Begin
-Inc(Filas);
-WriteLn('Fila ',Filas,'Columna ',Columnas );
-End;
-End;
-//WriteLn('Entro por:',Entrada,'Y Salio por:',Salida);
-Delay(5000);
-NotificarSalida(Filas,Columnas,Entrada);
-End; 	
-End;
-
-
-
-var opciones:integer;
-Begin
-	opciones:= 0;
-	while (opciones <> 3) do
-	begin
+	opciones:= '0';
+	repeat 
 		MostrarMatriz(Matriz,Jugador);
 		writeln('(1).Disparar  (2).Estimar Espejos  (3).Salir');
 		ReadLn(opciones);
 		case opciones of
-				1: Disparar(Pantalla,Jugador,Espejos);//Disparar(Pantalla,Espejos);
-				2: Estimar(Pantalla,Jugador,Espejos);
+				'1': Disparar(Pantalla,Jugador,Espejos);//Disparar(Pantalla,Espejos);
+				'2': Estimar(Pantalla,Jugador,Espejos);
 		end;
-	end;
-End;
-//	------ FIN PROCEDIMIENTO JUEGO ------
+	until (Jugador.NroDisparos = 0) or (opciones = '3');
+end;
+//	------ FIN PROCEDIMIENTO JUEGO ------	
+	
+	
+	
+	
+//Procure EspejosRebotar(Var Pantalla:TTPantallas;Var Jugador:TTJugador;Var Direccion:String; Const Espejos:Integer);
+////Begin
+//End;
+// pertenecia a procedimiento juego
+
+
+
+
+
 //	------ INICIO ------
 
 //	------ FIN ------
